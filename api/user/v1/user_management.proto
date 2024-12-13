@@ -1,0 +1,159 @@
+syntax = "proto3";
+
+package usermanagement.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto"; // 导入时间戳定义
+
+option go_package = "github.com/mengbin92/api/user/v1;v1";
+
+// 用户信息数据模型
+message User {
+  int32 id = 1;
+  string username = 2;
+  string email = 3;
+  string password_hash = 4;
+  google.protobuf.Timestamp created_at = 5; // 使用 Protobuf 的 Timestamp 类型
+  google.protobuf.Timestamp updated_at = 6;
+  google.protobuf.Timestamp last_login_at = 7;
+  string api_key = 8;
+  bool two_factor_enabled = 9;
+  string status = 10;
+  string role = 11;
+}
+
+// API 密钥数据模型
+message ApiKey {
+  int32 id = 1;
+  int32 user_id = 2;
+  string api_key = 3;
+  google.protobuf.Timestamp created_at = 4;
+  google.protobuf.Timestamp expires_at = 5;
+  string permissions = 6; // 权限 JSON 格式
+  string status = 7;      // 'active' 或 'revoked'
+}
+
+// 用户活动数据模型
+message UserActivity {
+  int32 id = 1;
+  int32 user_id = 2;
+  string activity_type = 3;
+  string details = 4;
+  google.protobuf.Timestamp created_at = 5;
+}
+
+// 请求模型：获取用户信息
+message GetUserRequest { int32 user_id = 1; }
+
+// 响应模型：用户信息响应
+message GetUserResponse { User user = 1; }
+
+// 请求模型：创建用户
+message CreateUserRequest {
+  string username = 1;
+  string email = 2;
+  string password = 3;
+  string role = 4; // 默认 'user'
+}
+
+// 响应模型：创建用户响应
+message CreateUserResponse {
+  int32 user_id = 1;
+  string status = 2; // 'success' 或 'failure'
+}
+
+// 请求模型：更新用户信息
+message UpdateUserRequest {
+  int32 user_id = 1;
+  string username = 2;
+  string email = 3;
+  string password = 4;
+  string status = 5; // 'active', 'inactive', 'suspended', 'deleted'
+}
+
+// 响应模型：更新用户信息响应
+message UpdateUserResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// 请求模型：删除用户
+message DeleteUserRequest { int32 user_id = 1; }
+
+// 响应模型：删除用户响应
+message DeleteUserResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// 请求模型：获取 API 密钥
+message GetApiKeyRequest { int32 user_id = 1; }
+
+// 响应模型：API 密钥响应
+message GetApiKeyResponse { repeated ApiKey api_keys = 1; }
+
+// 请求模型：创建 API 密钥
+message CreateApiKeyRequest {
+  int32 user_id = 1;
+  string permissions = 2; // 权限（JSON 格式）
+}
+
+// 响应模型：创建 API 密钥响应
+message CreateApiKeyResponse {
+  string api_key = 1;
+  google.protobuf.Timestamp created_at = 2;
+  google.protobuf.Timestamp expires_at = 3;
+  string status = 4; // 'active' 或 'revoked'
+}
+
+// 请求模型：撤销 API 密钥
+message RevokeApiKeyRequest { int32 api_key_id = 1; }
+
+// 响应模型：撤销 API 密钥响应
+message RevokeApiKeyResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+// gRPC 服务接口
+service UserManagement {
+  rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+    option (google.api.http) = {
+      get : "/user/v1/{user_id}"
+    };
+  };
+  rpc CreateUser(CreateUserRequest) returns (CreateUserResponse){
+    option (google.api.http) = {
+        post: "user/v1/create"
+        body: "*"
+    };
+  };
+  rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse){
+    option (google.api.http) = {
+        put: "user/v1/update"
+        body: "*"
+    };
+  };
+  rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse){
+    option (google.api.http) = {
+        delete: "user/v1/delete/{user_id}"
+    };
+  };
+  rpc GetApiKey(GetApiKeyRequest) returns (GetApiKeyResponse){
+    option (google.api.http) = {
+        get : "/user/v1/key/{user_id}"
+      };
+  };
+  rpc CreateApiKey(CreateApiKeyRequest) returns (CreateApiKeyResponse){
+    option (google.api.http) = {
+        post: "user/v1/key/create"
+        body: "*"
+    };
+  };
+  rpc RevokeApiKey(RevokeApiKeyRequest) returns (RevokeApiKeyResponse){
+    option (google.api.http) = {
+        put: "user/v1/key/revoke/{api_key_id}"
+        body: "*"
+    };
+  };
+}

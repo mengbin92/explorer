@@ -1,0 +1,305 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: UserManagement API
+    description: gRPC 服务接口
+    version: 0.0.1
+paths:
+    /user/v1/key/{userId}:
+        get:
+            tags:
+                - UserManagement
+            operationId: UserManagement_GetApiKey
+            parameters:
+                - name: userId
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/usermanagement.v1.GetApiKeyResponse'
+    /user/v1/{userId}:
+        get:
+            tags:
+                - UserManagement
+            operationId: UserManagement_GetUser
+            parameters:
+                - name: userId
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/usermanagement.v1.GetUserResponse'
+    user/v1/create:
+        post:
+            tags:
+                - UserManagement
+            operationId: UserManagement_CreateUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/usermanagement.v1.CreateUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/usermanagement.v1.CreateUserResponse'
+    user/v1/delete/{userId}:
+        delete:
+            tags:
+                - UserManagement
+            operationId: UserManagement_DeleteUser
+            parameters:
+                - name: userId
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/usermanagement.v1.DeleteUserResponse'
+    user/v1/key/create:
+        post:
+            tags:
+                - UserManagement
+            operationId: UserManagement_CreateApiKey
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/usermanagement.v1.CreateApiKeyRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/usermanagement.v1.CreateApiKeyResponse'
+    user/v1/key/revoke/{apiKeyId}:
+        put:
+            tags:
+                - UserManagement
+            operationId: UserManagement_RevokeApiKey
+            parameters:
+                - name: apiKeyId
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: int32
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/usermanagement.v1.RevokeApiKeyRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/usermanagement.v1.RevokeApiKeyResponse'
+    user/v1/update:
+        put:
+            tags:
+                - UserManagement
+            operationId: UserManagement_UpdateUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/usermanagement.v1.UpdateUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/usermanagement.v1.UpdateUserResponse'
+components:
+    schemas:
+        usermanagement.v1.ApiKey:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                userId:
+                    type: integer
+                    format: int32
+                apiKey:
+                    type: string
+                createdAt:
+                    type: string
+                    format: date-time
+                expiresAt:
+                    type: string
+                    format: date-time
+                permissions:
+                    type: string
+                status:
+                    type: string
+            description: API 密钥数据模型
+        usermanagement.v1.CreateApiKeyRequest:
+            type: object
+            properties:
+                userId:
+                    type: integer
+                    format: int32
+                permissions:
+                    type: string
+            description: 请求模型：创建 API 密钥
+        usermanagement.v1.CreateApiKeyResponse:
+            type: object
+            properties:
+                apiKey:
+                    type: string
+                createdAt:
+                    type: string
+                    format: date-time
+                expiresAt:
+                    type: string
+                    format: date-time
+                status:
+                    type: string
+            description: 响应模型：创建 API 密钥响应
+        usermanagement.v1.CreateUserRequest:
+            type: object
+            properties:
+                username:
+                    type: string
+                email:
+                    type: string
+                password:
+                    type: string
+                role:
+                    type: string
+            description: 请求模型：创建用户
+        usermanagement.v1.CreateUserResponse:
+            type: object
+            properties:
+                userId:
+                    type: integer
+                    format: int32
+                status:
+                    type: string
+            description: 响应模型：创建用户响应
+        usermanagement.v1.DeleteUserResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 响应模型：删除用户响应
+        usermanagement.v1.GetApiKeyResponse:
+            type: object
+            properties:
+                apiKeys:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/usermanagement.v1.ApiKey'
+            description: 响应模型：API 密钥响应
+        usermanagement.v1.GetUserResponse:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/usermanagement.v1.User'
+            description: 响应模型：用户信息响应
+        usermanagement.v1.RevokeApiKeyRequest:
+            type: object
+            properties:
+                apiKeyId:
+                    type: integer
+                    format: int32
+            description: 请求模型：撤销 API 密钥
+        usermanagement.v1.RevokeApiKeyResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 响应模型：撤销 API 密钥响应
+        usermanagement.v1.UpdateUserRequest:
+            type: object
+            properties:
+                userId:
+                    type: integer
+                    format: int32
+                username:
+                    type: string
+                email:
+                    type: string
+                password:
+                    type: string
+                status:
+                    type: string
+            description: 请求模型：更新用户信息
+        usermanagement.v1.UpdateUserResponse:
+            type: object
+            properties:
+                success:
+                    type: boolean
+                message:
+                    type: string
+            description: 响应模型：更新用户信息响应
+        usermanagement.v1.User:
+            type: object
+            properties:
+                id:
+                    type: integer
+                    format: int32
+                username:
+                    type: string
+                email:
+                    type: string
+                passwordHash:
+                    type: string
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+                lastLoginAt:
+                    type: string
+                    format: date-time
+                apiKey:
+                    type: string
+                twoFactorEnabled:
+                    type: boolean
+                status:
+                    type: string
+                role:
+                    type: string
+            description: 用户信息数据模型
+tags:
+    - name: UserManagement
