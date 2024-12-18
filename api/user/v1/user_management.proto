@@ -33,11 +33,20 @@ message ApiKey {
   string status = 7;      // 'active' 或 'revoked'
 }
 
+// 用户活动类型枚举
+enum ActivityType {
+  ACTIVITY_TYPE_UNSPECIFIED = 0; // 默认值，用于无效或未知活动类型
+  LOGIN = 1;                     // 登录活动
+  API_CALL = 2;                  // API 调用
+  UPDATE = 3;            // 更新用户资料
+  CREATE = 4;            // 创建项目
+}
+
 // 用户活动数据模型
 message UserActivity {
   int32 id = 1;
   int32 user_id = 2;
-  string activity_type = 3;
+  ActivityType activity_type = 3;
   string details = 4;
   google.protobuf.Timestamp created_at = 5;
 }
