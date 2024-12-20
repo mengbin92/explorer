@@ -7,6 +7,7 @@ import (
 
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
+	"github.com/mengbin92/explorer/internal/biz"
 	"github.com/mengbin92/explorer/internal/conf"
 	"github.com/stretchr/testify/assert"
 )
@@ -52,7 +53,7 @@ func TestCreateUser(t *testing.T) {
 
 	// 创建一个新用户
 	now := time.Now()
-	newUser := User{
+	newUser := biz.User{
 		Username:         "john_doe0878",
 		Email:            "john77@example.com",
 		PasswordHash:     "hashedpassword123", // 在实际使用中，密码应该经过哈希处理
@@ -71,7 +72,7 @@ func TestCreateUser(t *testing.T) {
 	}
 
 	// 创建 API 密钥记录
-	apiKey := ApiKey{
+	apiKey := biz.ApiKey{
 		UserID:    newUser.ID,
 		ApiKey:    "new-api-key",
 		CreatedAt: time.Now(),
@@ -89,7 +90,7 @@ func TestCreateUser(t *testing.T) {
 	}
 
 	// 创建用户活动记录
-	userActivity := UserActivity{
+	userActivity := biz.UserActivity{
 		UserID:       newUser.ID,
 		ActivityType: "create_project", // 活动类型为用户创建
 		Details:      "User created through API",
@@ -113,8 +114,8 @@ func TestLoadUser(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, data)
 
-	var users []User
-	if err := data.db.Model(&User{}).Find(&users).Error; err != nil {
+	var users []biz.User
+	if err := data.db.Model(&biz.User{}).Find(&users).Error; err != nil {
 		t.Error(err)
 	}
 	for _, user := range users {
@@ -130,8 +131,8 @@ func TestLoadApikey(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, data)
 
-	var apikeys []ApiKey
-	if err := data.db.Model(&ApiKey{}).Find(&apikeys).Error; err != nil {
+	var apikeys []biz.ApiKey
+	if err := data.db.Model(&biz.ApiKey{}).Find(&apikeys).Error; err != nil {
 		t.Error(err)
 	}
 	for _, apikey := range apikeys {
@@ -147,8 +148,8 @@ func TestLoadUserActivity(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, data)
 
-	var userActivities []UserActivity
-	if err := data.db.Model(&UserActivity{}).Find(&userActivities).Error; err != nil {
+	var userActivities []biz.UserActivity
+	if err := data.db.Model(&biz.UserActivity{}).Find(&userActivities).Error; err != nil {
 		t.Error(err)
 	}
 	for _, userActivity := range userActivities {

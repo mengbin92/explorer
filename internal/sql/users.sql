@@ -52,7 +52,7 @@ CREATE TABLE `permissions` (
 CREATE TABLE `user_activity` (
   `id` INT AUTO_INCREMENT PRIMARY KEY,
   `user_id` INT NOT NULL,
-  `activity_type` ENUM('login', 'api_call', 'update_profile', 'create_project') NOT NULL,
+  `activity_type` ENUM('login', 'api_call', 'update_profile', 'create_project','unknown_activity') NOT NULL,
   `details` TEXT,
   `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (`user_id`) REFERENCES `users`(`id`)
