@@ -17,8 +17,7 @@ paths:
                   in: path
                   required: true
                   schema:
-                    type: integer
-                    format: int32
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -36,8 +35,7 @@ paths:
                   in: path
                   required: true
                   schema:
-                    type: integer
-                    format: int32
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -73,8 +71,7 @@ paths:
                   in: path
                   required: true
                   schema:
-                    type: integer
-                    format: int32
+                    type: string
             responses:
                 "200":
                     description: OK
@@ -110,8 +107,7 @@ paths:
                   in: path
                   required: true
                   schema:
-                    type: integer
-                    format: int32
+                    type: string
             requestBody:
                 content:
                     application/json:
@@ -149,11 +145,9 @@ components:
             type: object
             properties:
                 id:
-                    type: integer
-                    format: int32
+                    type: string
                 userId:
-                    type: integer
-                    format: int32
+                    type: string
                 apiKey:
                     type: string
                 createdAt:
@@ -171,8 +165,7 @@ components:
             type: object
             properties:
                 userId:
-                    type: integer
-                    format: int32
+                    type: string
                 permissions:
                     type: string
             description: 请求模型：创建 API 密钥
@@ -206,8 +199,7 @@ components:
             type: object
             properties:
                 userId:
-                    type: integer
-                    format: int32
+                    type: string
                 status:
                     type: string
             description: 响应模型：创建用户响应
@@ -237,8 +229,7 @@ components:
             type: object
             properties:
                 apiKeyId:
-                    type: integer
-                    format: int32
+                    type: string
             description: 请求模型：撤销 API 密钥
         usermanagement.v1.RevokeApiKeyResponse:
             type: object
@@ -252,8 +243,7 @@ components:
             type: object
             properties:
                 userId:
-                    type: integer
-                    format: int32
+                    type: string
                 username:
                     type: string
                 email:
@@ -275,8 +265,7 @@ components:
             type: object
             properties:
                 id:
-                    type: integer
-                    format: int32
+                    type: string
                 username:
                     type: string
                 email:

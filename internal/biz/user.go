@@ -38,7 +38,7 @@ type User struct {
 
 func (u *User) Toproto() *pb.User {
 	return &pb.User{
-		Id:               int32(u.ID),
+		Id:               int64(u.ID),
 		Username:         u.Username,
 		Email:            u.Email,
 		PasswordHash:     u.PasswordHash,
@@ -65,8 +65,8 @@ type ApiKey struct {
 
 func (k *ApiKey) Toproto() *pb.ApiKey {
 	return &pb.ApiKey{
-		Id:          int32(k.ID),
-		UserId:      int32(k.UserID),
+		Id:          int64(k.ID),
+		UserId:      int64(k.UserID),
 		ApiKey:      k.ApiKey,
 		CreatedAt:   timestamppb.New(k.CreatedAt),
 		ExpiresAt:   timestamppb.New(k.ExpiresAt),
@@ -90,8 +90,8 @@ func (a *UserActivity) TableName() string {
 
 func (a *UserActivity) Toproto() *pb.UserActivity {
 	ua := &pb.UserActivity{
-		Id:        int32(a.ID),
-		UserId:    int32(a.UserID),
+		Id:        int64(a.ID),
+		UserId:    int64(a.UserID),
 		Details:   a.Details,
 		CreatedAt: timestamppb.New(a.CreatedAt),
 	}

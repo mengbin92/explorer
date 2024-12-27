@@ -9,7 +9,7 @@ option go_package = "github.com/mengbin92/api/user/v1;v1";
 
 // 用户信息数据模型
 message User {
-  int32 id = 1;
+  int64 id = 1;
   string username = 2;
   string email = 3;
   string password_hash = 4;
@@ -24,8 +24,8 @@ message User {
 
 // API 密钥数据模型
 message ApiKey {
-  int32 id = 1;
-  int32 user_id = 2;
+  int64 id = 1;
+  int64 user_id = 2;
   string api_key = 3;
   google.protobuf.Timestamp created_at = 4;
   google.protobuf.Timestamp expires_at = 5;
@@ -44,15 +44,15 @@ enum ActivityType {
 
 // 用户活动数据模型
 message UserActivity {
-  int32 id = 1;
-  int32 user_id = 2;
+  int64 id = 1;
+  int64 user_id = 2;
   ActivityType activity_type = 3;
   string details = 4;
   google.protobuf.Timestamp created_at = 5;
 }
 
 // 请求模型：获取用户信息
-message GetUserRequest { int32 user_id = 1; }
+message GetUserRequest { int64 user_id = 1; }
 
 // 响应模型：用户信息响应
 message GetUserResponse { User user = 1; }
@@ -67,13 +67,13 @@ message CreateUserRequest {
 
 // 响应模型：创建用户响应
 message CreateUserResponse {
-  int32 user_id = 1;
+  int64 user_id = 1;
   string status = 2; // 'success' 或 'failure'
 }
 
 // 请求模型：更新用户信息
 message UpdateUserRequest {
-  int32 user_id = 1;
+  int64 user_id = 1;
   string username = 2;
   string email = 3;
   string password = 4;
@@ -87,7 +87,7 @@ message UpdateUserResponse {
 }
 
 // 请求模型：删除用户
-message DeleteUserRequest { int32 user_id = 1; }
+message DeleteUserRequest { int64 user_id = 1; }
 
 // 响应模型：删除用户响应
 message DeleteUserResponse {
@@ -96,14 +96,14 @@ message DeleteUserResponse {
 }
 
 // 请求模型：获取 API 密钥
-message GetApiKeyRequest { int32 user_id = 1; }
+message GetApiKeyRequest { int64 user_id = 1; }
 
 // 响应模型：API 密钥响应
 message GetApiKeyResponse { repeated ApiKey api_keys = 1; }
 
 // 请求模型：创建 API 密钥
 message CreateApiKeyRequest {
-  int32 user_id = 1;
+  int64 user_id = 1;
   string permissions = 2; // 权限（JSON 格式）
 }
 
@@ -116,7 +116,7 @@ message CreateApiKeyResponse {
 }
 
 // 请求模型：撤销 API 密钥
-message RevokeApiKeyRequest { int32 api_key_id = 1; }
+message RevokeApiKeyRequest { int64 api_key_id = 1; }
 
 // 响应模型：撤销 API 密钥响应
 message RevokeApiKeyResponse {
