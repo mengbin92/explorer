@@ -7,7 +7,8 @@ import "google/protobuf/duration.proto";
 
 message Bootstrap {
   Server server = 1;
-  Data data = 2;
+  Database database = 2;
+  Redis redis = 3;
 }
 
 message Server {
@@ -25,17 +26,16 @@ message Server {
   GRPC grpc = 2;
 }
 
-message Data {
-  message Database {
-    string driver = 1;
-    string source = 2;
-  }
-  message Redis {
-    string network = 1;
-    string addr = 2;
-    google.protobuf.Duration read_timeout = 3;
-    google.protobuf.Duration write_timeout = 4;
-  }
-  Database database = 1;
-  Redis redis = 2;
+message Database {
+  string driver = 1;
+  string source = 2;
+}
+
+message Redis {
+  string addr = 1;
+  string password = 2;
+  int32 db = 3;
+  int32 pool_size = 4;
+  google.protobuf.Duration read_timeout = 5;
+  google.protobuf.Duration write_timeout = 6;
 }
