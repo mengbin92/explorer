@@ -1,0 +1,92 @@
+syntax = "proto3";
+
+package api.explorer.v1;
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+import "explorer/v1/common.proto";
+
+option go_package = "explorer/api/explorer/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.explorer.v1";
+
+service Chain {
+  rpc GetBlockNumer(google.protobuf.Empty) returns (GetBlockNumerReply) {
+    option (google.api.http) = {
+      get : "/chain/v1/get_block_number",
+    };
+  }
+
+  rpc GetNetworkId(google.protobuf.Empty) returns (GetNetworkIdReply) {
+    option (google.api.http) = {
+      get : "/chain/v1/get_network_id",
+    };
+  }
+
+  rpc GetBalance(GetBalanceRequest) returns (GetBalanceReply) {
+    option (google.api.http) = {
+      get : "/chain/v1/get_balance/{address}",
+    };
+  }
+
+  rpc GetTransaction(GetTransactionRequest) returns (GetTransactionReply) {
+    option (google.api.http) = {
+      get : "/chain/v1/get_transaction/{transaction_hash}",
+    };
+  }
+
+  rpc GetTransactionReceipt(GetTransactionReceiptRequest)
+      returns (GetTransactionReceiptReply) {
+    option (google.api.http) = {
+      get : "/chain/v1/get_transaction_receipt/{transaction_hash}",
+    };
+  }
+
+  rpc GetBlockByNumber(GetBlockByNumberRequest) returns (GetBlockReply) {
+    option (google.api.http) = {
+      get : "/chain/v1/get_block_by_number/{block_number}",
+    };
+  }
+
+  rpc GetBlockByHash(GetBlockByHashRequest) returns (GetBlockReply) {
+    option (google.api.http) = {
+      get : "/chain/v1/get_block_by_hash/{block_hash}",
+    };
+  }
+}
+
+message GetBlockNumerReply {
+  Status status = 1;
+  uint64 block_number = 2;
+}
+
+message GetNetworkIdReply {
+  Status status = 1;
+  uint64 network_id = 2;
+}
+
+message GetBalanceRequest { string address = 1; }
+message GetBalanceReply {
+  Status status = 1;
+  uint64 balance = 2;
+}
+
+message GetTransactionRequest { string transaction_hash = 1; }
+message GetTransactionReply {
+  Status status = 1;
+  string transaction = 2;
+}
+
+message GetTransactionReceiptRequest { string transaction_hash = 1; }
+message GetTransactionReceiptReply {
+  Status status = 1;
+  string transaction_receipt = 2;
+}
+
+message GetBlockByNumberRequest { uint64 block_number = 1; }
+message GetBlockByHashRequest { string block_hash = 1; }
+message GetBlockReply {
+  Status status = 1;
+  string block = 2;
+}

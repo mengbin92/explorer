@@ -20,5 +20,10 @@ redis:
 auth_config:
   algorithm: HS256 # HS256 or HS384 or HS512
   secret: secret
-  token_expire_in_seconds: 300s
+  token_expire_in_seconds: 3600s
   issuer: explorer
+
+chain_config:
+  name: ethereum
+  http_endpoint: http://124.221.195.50:32769
+  

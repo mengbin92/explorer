@@ -10,6 +10,7 @@ message Bootstrap {
   Database database = 2;
   Redis redis = 3;
   AuthConfig auth_config = 4;
+  ChainConfig chain_config = 5;
 }
 
 message Server {
@@ -46,4 +47,10 @@ message AuthConfig {
   string secret_key = 2;
   google.protobuf.Duration token_expire_in_seconds = 3;
   string issuer = 4;
+}
+
+message ChainConfig {
+  string name = 1;
+  string http_endpoint = 2;
+  string ws_endpoint = 3;
 }
