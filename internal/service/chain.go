@@ -104,7 +104,7 @@ func (s *ChainService) GetBlockByNumber(ctx context.Context, req *pb.GetBlockByN
 	if err != nil {
 		return nil, errors.Wrap(err, "get block by number failed")
 	}
-	blockBytes, err := sonic.Marshal(block)
+	blockBytes, err := sonic.Marshal(FromTypesBlock(block))
 	if err != nil {
 		return nil, errors.Wrap(err, "marshal block failed")
 	}
@@ -121,7 +121,7 @@ func (s *ChainService) GetBlockByHash(ctx context.Context, req *pb.GetBlockByHas
 	if err != nil {
 		return nil, errors.Wrap(err, "get block by hash failed")
 	}
-	blockBytes, err := sonic.Marshal(block)
+	blockBytes, err := sonic.Marshal(FromTypesBlock(block))
 	if err != nil {
 		return nil, errors.Wrap(err, "marshal block failed")
 	}
