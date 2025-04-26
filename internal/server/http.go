@@ -3,6 +3,7 @@ package server
 import (
 	v1 "explorer/api/explorer/v1"
 	"explorer/internal/conf"
+	"explorer/internal/middleware"
 	"explorer/internal/service"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -11,10 +12,13 @@ import (
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, basicService *service.BasicService, logger log.Logger) *http.Server {
+func NewHTTPServer(c *conf.Server, basicService *service.BasicService, userService *service.UserService, logger log.Logger) *http.Server {
+	authMiddleware := middleware.NewAuthMiddleware(userService.UserManager, logger)
+
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
+			middleware.AuthMiddlewareWrap(authMiddleware),
 		),
 	}
 	if c.Http.Network != "" {
@@ -28,5 +32,6 @@ func NewHTTPServer(c *conf.Server, basicService *service.BasicService, logger lo
 	}
 	srv := http.NewServer(opts...)
 	v1.RegisterBasicHTTPServer(srv, basicService)
+	v1.RegisterUserHTTPServer(srv, userService)
 	return srv
 }

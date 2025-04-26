@@ -3,6 +3,7 @@ package server
 import (
 	v1 "explorer/api/explorer/v1"
 	"explorer/internal/conf"
+	"explorer/internal/middleware"
 	"explorer/internal/service"
 
 	"github.com/go-kratos/kratos/v2/log"
@@ -11,10 +12,13 @@ import (
 )
 
 // NewGRPCServer new a gRPC server.
-func NewGRPCServer(c *conf.Server, basicService *service.BasicService, logger log.Logger) *grpc.Server {
+func NewGRPCServer(c *conf.Server, basicService *service.BasicService, userService *service.UserService, logger log.Logger) *grpc.Server {
+	authMiddleware := middleware.NewAuthMiddleware(userService.UserManager, logger)
+	
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
 			recovery.Recovery(),
+			middleware.AuthMiddlewareWrap(authMiddleware),
 		),
 	}
 	if c.Grpc.Network != "" {
@@ -28,5 +32,6 @@ func NewGRPCServer(c *conf.Server, basicService *service.BasicService, logger lo
 	}
 	srv := grpc.NewServer(opts...)
 	v1.RegisterBasicServer(srv, basicService)
+	v1.RegisterUserServer(srv, userService)
 	return srv
 }

@@ -193,7 +193,7 @@ components:
                     type: string
                 userId:
                     type: string
-                roles:
+                permissions:
                     type: array
                     items:
                         type: string

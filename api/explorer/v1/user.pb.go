@@ -27,7 +27,7 @@ type UserProfile struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Username      string                 `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
 	UserId        uint64                 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	Roles         []string               `protobuf:"bytes,3,rep,name=roles,proto3" json:"roles,omitempty"`
+	Permissions   []string               `protobuf:"bytes,3,rep,name=permissions,proto3" json:"permissions,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -76,9 +76,9 @@ func (x *UserProfile) GetUserId() uint64 {
 	return 0
 }
 
-func (x *UserProfile) GetRoles() []string {
+func (x *UserProfile) GetPermissions() []string {
 	if x != nil {
-		return x.Roles
+		return x.Permissions
 	}
 	return nil
 }
@@ -599,11 +599,11 @@ var File_explorer_v1_user_proto protoreflect.FileDescriptor
 
 const file_explorer_v1_user_proto_rawDesc = "" +
 	"\n" +
-	"\x16explorer/v1/user.proto\x12\x0fapi.explorer.v1\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x18explorer/v1/common.proto\"X\n" +
+	"\x16explorer/v1/user.proto\x12\x0fapi.explorer.v1\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1cgoogle/api/annotations.proto\x1a\x18explorer/v1/common.proto\"d\n" +
 	"\vUserProfile\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x17\n" +
-	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12\x14\n" +
-	"\x05roles\x18\x03 \x03(\tR\x05roles\"u\n" +
+	"\auser_id\x18\x02 \x01(\x04R\x06userId\x12 \n" +
+	"\vpermissions\x18\x03 \x03(\tR\vpermissions\"u\n" +
 	"\x0fRegisterRequest\x12\x1a\n" +
 	"\busername\x18\x01 \x01(\tR\busername\x12\x1a\n" +
 	"\bpassword\x18\x02 \x01(\tR\bpassword\x12\x14\n" +

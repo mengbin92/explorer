@@ -27,33 +27,31 @@ service User {
   }
 
   rpc Logout(google.protobuf.Empty) returns (LogoutReply) {
-	option (google.api.http) = {
-	  post : "/user/v1/logout",
-	  body : "*"
-	};
+    option (google.api.http) = {
+      post : "/user/v1/logout",
+      body : "*"
+    };
   }
 
   rpc Update(UpdateUserRequest) returns (UpdateUserReply) {
-	option (google.api.http) = {
-	  post : "/user/v1/update",
-	  body : "*"
-	};
+    option (google.api.http) = {
+      post : "/user/v1/update",
+      body : "*"
+    };
   }
 
   rpc Delete(DeleteUserRequest) returns (DeleteUserReply) {
-	option (google.api.http) = {
-	  post : "/user/v1/delete",
-	  body : "*"
-	};
+    option (google.api.http) = {
+      post : "/user/v1/delete",
+      body : "*"
+    };
   }
-
-
 }
 
 message UserProfile {
   string username = 1;
   uint64 user_id = 2;
-  repeated string roles = 3;
+  repeated string permissions = 3;
 }
 
 message RegisterRequest {
