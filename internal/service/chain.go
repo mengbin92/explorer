@@ -29,6 +29,7 @@ func NewChainService(logger log.Logger) *ChainService {
 func (s *ChainService) GetBlockNumer(ctx context.Context, req *emptypb.Empty) (*pb.GetBlockNumerReply, error) {
 	bn, err := chain.GetEthereumHttpClient().BlockNumber(ctx)
 	if err != nil {
+		s.Logger.Errorf("get block number failed: %v", err)
 		return nil, errors.Wrap(err, "get block number failed")
 	}
 	return &pb.GetBlockNumerReply{
@@ -42,6 +43,7 @@ func (s *ChainService) GetBlockNumer(ctx context.Context, req *emptypb.Empty) (*
 func (s *ChainService) GetNetworkId(ctx context.Context, req *emptypb.Empty) (*pb.GetNetworkIdReply, error) {
 	id, err := chain.GetEthereumHttpClient().NetworkID(ctx)
 	if err != nil {
+		s.Logger.Errorf("get network id failed: %v", err)
 		return nil, errors.Wrap(err, "get network id failed")
 	}
 	return &pb.GetNetworkIdReply{
@@ -55,6 +57,7 @@ func (s *ChainService) GetNetworkId(ctx context.Context, req *emptypb.Empty) (*p
 func (s *ChainService) GetBalance(ctx context.Context, req *pb.GetBalanceRequest) (*pb.GetBalanceReply, error) {
 	balance, err := chain.GetEthereumHttpClient().BalanceAt(ctx, common.HexToAddress(req.Address), nil)
 	if err != nil {
+		s.Logger.Errorf("get balance failed: %v", err)
 		return nil, errors.Wrap(err, "get balance failed")
 	}
 	return &pb.GetBalanceReply{
@@ -68,10 +71,12 @@ func (s *ChainService) GetBalance(ctx context.Context, req *pb.GetBalanceRequest
 func (s *ChainService) GetTransaction(ctx context.Context, req *pb.GetTransactionRequest) (*pb.GetTransactionReply, error) {
 	tx, _, err := chain.GetEthereumHttpClient().TransactionByHash(ctx, common.HexToHash(req.TransactionHash))
 	if err != nil {
+		s.Logger.Errorf("get transaction failed: %v", err)
 		return nil, errors.Wrap(err, "get transaction failed")
 	}
 	txBytes, err := tx.MarshalJSON()
 	if err != nil {
+		s.Logger.Errorf("marshal transaction failed: %v", err)
 		return nil, errors.Wrap(err, "marshal transaction failed")
 	}
 	return &pb.GetTransactionReply{
@@ -85,10 +90,12 @@ func (s *ChainService) GetTransaction(ctx context.Context, req *pb.GetTransactio
 func (s *ChainService) GetTransactionReceipt(ctx context.Context, req *pb.GetTransactionReceiptRequest) (*pb.GetTransactionReceiptReply, error) {
 	recipt, err := chain.GetEthereumHttpClient().TransactionReceipt(ctx, common.HexToHash(req.TransactionHash))
 	if err != nil {
+		s.Logger.Errorf("get transaction receipt failed: %v", err)
 		return nil, errors.Wrap(err, "get transaction receipt failed")
 	}
 	reciptBytes, err := recipt.MarshalJSON()
 	if err != nil {
+		s.Logger.Errorf("marshal transaction receipt failed: %v", err)
 		return nil, errors.Wrap(err, "marshal transaction receipt failed")
 	}
 	return &pb.GetTransactionReceiptReply{
@@ -102,10 +109,12 @@ func (s *ChainService) GetTransactionReceipt(ctx context.Context, req *pb.GetTra
 func (s *ChainService) GetBlockByNumber(ctx context.Context, req *pb.GetBlockByNumberRequest) (*pb.GetBlockReply, error) {
 	block, err := chain.GetEthereumHttpClient().BlockByNumber(ctx, big.NewInt(int64(req.BlockNumber)))
 	if err != nil {
+		s.Logger.Errorf("get block by number failed: %v", err)
 		return nil, errors.Wrap(err, "get block by number failed")
 	}
 	blockBytes, err := sonic.Marshal(FromTypesBlock(block))
 	if err != nil {
+		s.Logger.Errorf("marshal block failed: %v", err)
 		return nil, errors.Wrap(err, "marshal block failed")
 	}
 	return &pb.GetBlockReply{
@@ -119,10 +128,12 @@ func (s *ChainService) GetBlockByNumber(ctx context.Context, req *pb.GetBlockByN
 func (s *ChainService) GetBlockByHash(ctx context.Context, req *pb.GetBlockByHashRequest) (*pb.GetBlockReply, error) {
 	block, err := chain.GetEthereumHttpClient().BlockByHash(ctx, common.HexToHash(req.BlockHash))
 	if err != nil {
+		s.Logger.Errorf("get block by hash failed: %v", err)
 		return nil, errors.Wrap(err, "get block by hash failed")
 	}
 	blockBytes, err := sonic.Marshal(FromTypesBlock(block))
 	if err != nil {
+		s.Logger.Errorf("marshal block failed: %v", err)
 		return nil, errors.Wrap(err, "marshal block failed")
 	}
 	return &pb.GetBlockReply{
