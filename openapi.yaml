@@ -169,14 +169,10 @@ paths:
                             schema:
                                 $ref: '#/components/schemas/api.explorer.v1.LoginReply'
     /user/v1/logout:
-        post:
+        get:
             tags:
                 - User
             operationId: User_Logout
-            requestBody:
-                content:
-                    application/json: {}
-                required: true
             responses:
                 "200":
                     description: OK
@@ -184,6 +180,18 @@ paths:
                         application/json:
                             schema:
                                 $ref: '#/components/schemas/api.explorer.v1.LogoutReply'
+    /user/v1/refresh_token:
+        get:
+            tags:
+                - User
+            operationId: User_RefreshToken
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.explorer.v1.LoginReply'
     /user/v1/register:
         post:
             tags:

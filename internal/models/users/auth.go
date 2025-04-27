@@ -80,6 +80,28 @@ func (m *UserManager) Login(ctx context.Context, username, password string, db *
 	return token, nil
 }
 
+func (m *UserManager) RefreshToken(ctx context.Context, ua *UserAuthentication, db *gorm.DB) (string, error) {
+	user := &User{}
+	if err := db.Where("id = ?", ua.UserID).First(user).Error; err != nil {
+		m.Logger.Errorf("refresh user: %s token error: %v", ua.Username, err)
+		return "", errors.Wrap(err, "refresh user token failed")
+	}
+	
+	token, err := m.generateToken(user)
+	if err != nil {
+		m.Logger.Errorf("refresh user: %s token error: %v", user.Username, err)
+		return "", errors.Wrap(err, "refresh user token failed")
+	}
+
+	err = cache.GetRedisClient().Set(ctx, m.generateTokenCacheKey(user.ID), token, m.AuthConfig.TokenExpireInSeconds.AsDuration().Abs()).Err()
+	if err != nil {
+		m.Logger.Errorf("refresh user: %s token cache error: %v", user.Username, err)
+		return "", errors.Wrap(err, "cache login user token failed")
+	}
+
+	return token, nil
+}
+
 func (m *UserManager) loadUserAuthenticationFromToken(ctx context.Context, tokenStr string) (*UserAuthentication, error) {
 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 		return []byte(m.AuthConfig.SecretKey), nil
