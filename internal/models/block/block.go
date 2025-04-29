@@ -1,4 +1,4 @@
-package service
+package block
 
 import (
 	"github.com/ethereum/go-ethereum/core/types"
@@ -38,14 +38,14 @@ type Block struct {
 	BlobGasUsed           uint64   `json:"blobGasUsed"`
 	Difficulty            uint64   `json:"difficulty"`
 	ExcessBlobGas         uint64   `json:"excessBlobGas"`
-	ExtraData             string   `json:"extraData"`
+	ExtraData             []byte   `json:"extraData"`
 	GasLimit              uint64   `json:"gasLimit"`
 	GasUsed               uint64   `json:"gasUsed"`
-	Hash                  string   `json:"hash"`
-	LogsBloom             string   `json:"logsBloom"`
+	Hash                  string   `json:"hash" gorm:"primaryKey"`
+	LogsBloom             []byte   `json:"logsBloom"`
 	Miner                 string   `json:"miner"`
 	MixHash               string   `json:"mixHash"`
-	Nonce                 string   `json:"nonce"`
+	Nonce                 uint64   `json:"nonce"`
 	Number                uint64   `json:"number"`
 	ParentBeaconBlockRoot string   `json:"parentBeaconBlockRoot"`
 	ParentHash            string   `json:"parentHash"`
@@ -54,10 +54,10 @@ type Block struct {
 	Size                  uint64   `json:"size"`
 	StateRoot             string   `json:"stateRoot"`
 	Timestamp             uint64   `json:"timestamp"`
-	Transactions          []string `json:"transactions"`
+	Transactions          []string `json:"transactions" gorm:"serializer:json"`
 	TransactionsRoot      string   `json:"transactionsRoot"`
-	Uncles                []string `json:"uncles"`
-	Withdrawals           []string `json:"withdrawals"`
+	Uncles                []string `json:"uncles" gorm:"serializer:json"`
+	Withdrawals           []string `json:"withdrawals" gorm:"serializer:json"`
 	WithdrawalsRoot       string   `json:"withdrawalsRoot"`
 }
 
@@ -94,20 +94,21 @@ func FromTypesBlock(b *types.Block) *Block {
 	if baseFee != nil {
 		baseFeePerGas = baseFee.Uint64()
 	}
+	header.Bloom.Bytes()
 
 	return &Block{
 		BaseFeePerGas:         baseFeePerGas,
 		BlobGasUsed:           *header.BlobGasUsed,
 		Difficulty:            header.Difficulty.Uint64(),
 		ExcessBlobGas:         *header.ExcessBlobGas,
-		ExtraData:             "0x" + hex(header.Extra),
+		ExtraData:             header.Extra,
 		GasLimit:              header.GasLimit,
 		GasUsed:               header.GasUsed,
 		Hash:                  b.Hash().Hex(),
-		LogsBloom:             "0x" + hex(header.Bloom.Bytes()),
+		LogsBloom:             header.Bloom.Bytes(),
 		Miner:                 header.Coinbase.Hex(),
 		MixHash:               header.MixDigest.Hex(),
-		Nonce:                 "0x" + hex(header.Nonce[:]),
+		Nonce:                 header.Nonce.Uint64(),
 		Number:                header.Number.Uint64(),
 		ParentBeaconBlockRoot: header.ParentHash.Hex(),
 		ParentHash:            header.ParentHash.Hex(),
@@ -122,15 +123,4 @@ func FromTypesBlock(b *types.Block) *Block {
 		Withdrawals:           withdrawalHashes,
 		WithdrawalsRoot:       header.WithdrawalsHash.Hex(),
 	}
-}
-
-// hex 将字节切片转换为十六进制字符串（不带0x前缀）
-func hex(b []byte) string {
-	const hexDigits = "0123456789abcdef"
-	res := make([]byte, len(b)*2)
-	for i, v := range b {
-		res[i*2] = hexDigits[v>>4]
-		res[i*2+1] = hexDigits[v&0x0f]
-	}
-	return string(res)
 }

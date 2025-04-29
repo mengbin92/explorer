@@ -41,7 +41,7 @@ func InitEthereumWSClient(ctx context.Context, cfg *conf.ChainConfig, logger log
 	var err error
 
 	initWSOnce.Do(func() {
-		httpClient, err = ethclient.Dial(cfg.WsEndpoint)
+		wsClient, err = ethclient.Dial(cfg.WsEndpoint)
 		if err != nil {
 			logger.Log(log.LevelError, "InitEthereumWSClient", "err", err)
 		}

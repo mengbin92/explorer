@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"explorer/internal/conf"
+	"explorer/internal/models/block"
 	"explorer/internal/models/users"
 	"explorer/internal/server"
 	"explorer/internal/service"
@@ -26,7 +27,7 @@ func wireApp(ctx context.Context, bc *conf.Bootstrap, logger log.Logger) (*krato
 		logger.Log(log.LevelFatal, "msg", "init db failed")
 		return nil, nil, errors.Wrap(err, "init db failed")
 	}
-	db.Get().AutoMigrate(&users.User{})
+	db.Get().AutoMigrate(&users.User{}, &block.Block{})
 
 	// init redis
 	if err := cache.InitRedis(ctx, bc.Redis, logger); err != nil {
@@ -53,10 +54,24 @@ func wireApp(ctx context.Context, bc *conf.Bootstrap, logger log.Logger) (*krato
 
 		// close redis
 		cache.GetRedisClient().Close()
+
+		// release ethereum client
+		if chain.GetEthereumHttpClient() != nil {
+			chain.GetEthereumHttpClient().Close()
+		}
+		if chain.GetEthereumWSClient() != nil {
+			chain.GetEthereumWSClient().Close()
+		}
 	}
 
 	// init service
 	basicClient := service.NewBasicService(logger)
+	blockManager,err := block.NewBlockManager(logger)
+	if err != nil {
+		logger.Log(log.LevelFatal, "msg", "init block manager failed")
+		return nil, nil, errors.Wrap(err, "init block manager failed")
+	}
+	blockManager.WatcherBlock(ctx)
 
 	userManager := users.NewUserManager(bc.AuthConfig, logger)
 	userService := service.NewUserService(userManager, logger)

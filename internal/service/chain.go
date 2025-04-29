@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	pb "explorer/api/explorer/v1"
+	"explorer/internal/models/block"
 	"explorer/provider/chain"
 
 	"github.com/bytedance/sonic"
@@ -107,12 +108,12 @@ func (s *ChainService) GetTransactionReceipt(ctx context.Context, req *pb.GetTra
 	}, nil
 }
 func (s *ChainService) GetBlockByNumber(ctx context.Context, req *pb.GetBlockByNumberRequest) (*pb.GetBlockReply, error) {
-	block, err := chain.GetEthereumHttpClient().BlockByNumber(ctx, big.NewInt(int64(req.BlockNumber)))
+	blc, err := chain.GetEthereumHttpClient().BlockByNumber(ctx, big.NewInt(int64(req.BlockNumber)))
 	if err != nil {
 		s.Logger.Errorf("get block by number failed: %v", err)
 		return nil, errors.Wrap(err, "get block by number failed")
 	}
-	blockBytes, err := sonic.Marshal(FromTypesBlock(block))
+	blockBytes, err := sonic.Marshal(block.FromTypesBlock(blc))
 	if err != nil {
 		s.Logger.Errorf("marshal block failed: %v", err)
 		return nil, errors.Wrap(err, "marshal block failed")
@@ -126,12 +127,12 @@ func (s *ChainService) GetBlockByNumber(ctx context.Context, req *pb.GetBlockByN
 	}, nil
 }
 func (s *ChainService) GetBlockByHash(ctx context.Context, req *pb.GetBlockByHashRequest) (*pb.GetBlockReply, error) {
-	block, err := chain.GetEthereumHttpClient().BlockByHash(ctx, common.HexToHash(req.BlockHash))
+	blc, err := chain.GetEthereumHttpClient().BlockByHash(ctx, common.HexToHash(req.BlockHash))
 	if err != nil {
 		s.Logger.Errorf("get block by hash failed: %v", err)
 		return nil, errors.Wrap(err, "get block by hash failed")
 	}
-	blockBytes, err := sonic.Marshal(FromTypesBlock(block))
+	blockBytes, err := sonic.Marshal(block.FromTypesBlock(blc))
 	if err != nil {
 		s.Logger.Errorf("marshal block failed: %v", err)
 		return nil, errors.Wrap(err, "marshal block failed")

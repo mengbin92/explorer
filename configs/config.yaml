@@ -26,4 +26,5 @@ auth_config:
 chain_config:
   name: ethereum
   http_endpoint: http://124.221.195.50:32769
+  ws_endpoint: ws://124.221.195.50:32770
   
